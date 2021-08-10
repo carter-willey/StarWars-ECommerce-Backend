@@ -14,6 +14,11 @@ namespace eCommerceStarterCode.Data
         }
 
         // Create DbSets here for adding new tables to the database
+        public DbSet<Product> Products { get; set; }
+        public DbSet<ShoppingCart> ShoppingCarts { get; set; }
+        public DbSet<Category> Categories { get; set; }
+        public DbSet<Review> Reviews { get; set; }
+
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
