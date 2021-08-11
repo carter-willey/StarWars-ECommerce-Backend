@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 
 namespace eCommerceStarterCode.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("api/product")]
     [ApiController]
     public class ProductController : ControllerBase
     {
@@ -29,15 +29,19 @@ namespace eCommerceStarterCode.Controllers
             return Ok(products);
         }
 
-        //GET api/<ProductController>/5
+        //GET api/product/5
         [HttpGet("{id}")]
         public IActionResult Get(int id)
         {
-            var product = _context.Products.Where(product => product.ProductId == id);
+            var product = _context.Products.FirstOrDefault(product => product.ProductId == id);
+            if(product == null)
+            {
+                return NotFound();
+            }
             return Ok(product); 
         }
 
-        //// POST api/<ProductController>
+        // POST api/product
         [HttpPost]
         public IActionResult Post([FromBody]Product value)
         {
@@ -47,15 +51,30 @@ namespace eCommerceStarterCode.Controllers
         }
 
         //// PUT api/<ProductController>/5
-        //[HttpPut("{id}")]
-        //public IActionResult Put(int id, [FromBody] string value)
-        //{
-        //}
+        [HttpPut("{id}")]
+        public IActionResult Put(int id, [FromBody]Product value)
+        {
+            var product = _context.Products.FirstOrDefault(product => product.ProductId == id);
+            product.Name = value.Name;
+            product.Price = value.Price;
+            product.Description = value.Description;
+            product.AverageRating = value.AverageRating;
+            product.CategoryId = value.CategoryId;
+            product.UserId = value.UserId;
+            product.ReviewId = value.ReviewId;
+            _context.SaveChanges();
+            return Ok(product);
+        }
 
         //// DELETE api/<ProductController>/5
-        //[HttpDelete("{id}")]
-        //public IActionResult Delete(int id)
-        //{
-        //}
+        [HttpDelete("{id}")]
+        public IActionResult Delete(int id)
+        {
+            var product = _context.Products.FirstOrDefault(product => product.ProductId == id);
+            _context.Remove(product);
+            _context.SaveChanges();
+            return Ok();
+
+        }
     }
 }
