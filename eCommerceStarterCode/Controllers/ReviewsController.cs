@@ -24,7 +24,7 @@ namespace eCommerceStarterCode.Controllers
         [HttpGet("{id}")]
         public IActionResult Get(int id)
         {
-            var reviews = _context.Reviews;
+            var reviews = _context.Reviews.Where(review => review.ProductId == id);
             return Ok(reviews);
         }
 
