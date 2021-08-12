@@ -21,8 +21,8 @@ namespace eCommerceStarterCode.Controllers
             _context = context;
         }
         // GET: api/<ReviewsController>
-        [HttpGet]
-        public IActionResult Get()
+        [HttpGet("{id}")]
+        public IActionResult Get(int id)
         {
             var reviews = _context.Reviews;
             return Ok(reviews);
