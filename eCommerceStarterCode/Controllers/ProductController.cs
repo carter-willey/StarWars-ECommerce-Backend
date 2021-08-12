@@ -1,5 +1,6 @@
 ﻿using eCommerceStarterCode.Data;
 using eCommerceStarterCode.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
@@ -24,7 +25,6 @@ namespace eCommerceStarterCode.Controllers
         [HttpGet]
         public IActionResult Get()
         {
-            
             var products = _context.Products;
             return Ok(products);
         }
@@ -42,7 +42,7 @@ namespace eCommerceStarterCode.Controllers
         }
 
         // POST api/product
-        [HttpPost]
+        [HttpPost, Authorize]
         public IActionResult Post([FromBody]Product value)
         {
             _context.Products.Add(value);
@@ -61,7 +61,6 @@ namespace eCommerceStarterCode.Controllers
             product.AverageRating = value.AverageRating;
             product.CategoryId = value.CategoryId;
             product.UserId = value.UserId;
-            product.ReviewId = value.ReviewId;
             _context.SaveChanges();
             return Ok(product);
         }
@@ -74,7 +73,6 @@ namespace eCommerceStarterCode.Controllers
             _context.Remove(product);
             _context.SaveChanges();
             return Ok();
-
         }
     }
 }

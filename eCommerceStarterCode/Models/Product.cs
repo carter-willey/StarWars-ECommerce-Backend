@@ -19,8 +19,5 @@ namespace eCommerceStarterCode.Models
         [ForeignKey("User")]
         public string UserId { get; set; }
         public User User { get; set; }
-        [ForeignKey("Review")]
-        public int ReviewId { get; set; }
-        public Review Review { get; set; }
     }
 }
