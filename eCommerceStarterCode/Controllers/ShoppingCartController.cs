@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Claims;
 using System.Threading.Tasks;
 
 namespace eCommerceStarterCode.Controllers
@@ -21,11 +22,11 @@ namespace eCommerceStarterCode.Controllers
         // GET: api/<shoppingcartController>
         //GETS ALL ITEMS IN USERS CART 
         [HttpGet, Authorize]
-        public IActionResult Get([FromBody]ShoppingCart value)
+        public IActionResult Get()
         {
 
             var shoppingCart = _context.ShoppingCarts;
-            var specificUserCart = shoppingCart.Where(sc => sc.UserId == value.UserId);
+            var specificUserCart = shoppingCart.Where(sc => sc.UserId == User.FindFirstValue("id"));
             return Ok(specificUserCart);
         }
 
