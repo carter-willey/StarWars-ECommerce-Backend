@@ -43,7 +43,7 @@ namespace eCommerceStarterCode.Controllers
             foreach (var review in reviews)
             {
                 total += review.Rating;
-            };
+            }
             int averageRating = total / reviews.Count();
             product.AverageRating = averageRating;
             _context.SaveChanges();
