@@ -2,6 +2,7 @@
 using eCommerceStarterCode.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -24,8 +25,7 @@ namespace eCommerceStarterCode.Controllers
         [HttpGet, Authorize]
         public IActionResult Get()
         {
-
-            var shoppingCart = _context.ShoppingCarts;
+            var shoppingCart = _context.ShoppingCarts.Include(sc => sc.Product.User);
             var specificUserCart = shoppingCart.Where(sc => sc.UserId == User.FindFirstValue("id"));
             return Ok(specificUserCart);
         }
@@ -41,10 +41,10 @@ namespace eCommerceStarterCode.Controllers
 
         //// PATCH api/<ShoppingCartController>/5
         [HttpPatch("{id}"), Authorize]
-        public IActionResult Put(int id, [FromBody] ShoppingCart value)
+        public IActionResult Patch(int id, [FromBody] ShoppingCart value)
         {
 
-            var itemInCart = _context.ShoppingCarts.Where(sc => sc.ShoppingCartId == id).FirstOrDefault(sc => sc.UserId == value.UserId);
+            var itemInCart = _context.ShoppingCarts.Where(sc => sc.ShoppingCartId == id).FirstOrDefault(sc => sc.UserId == User.FindFirstValue("id"));
             
             itemInCart.Quantity = value.Quantity;
             _context.SaveChanges();
