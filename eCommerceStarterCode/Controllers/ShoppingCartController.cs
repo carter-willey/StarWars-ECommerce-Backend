@@ -47,6 +47,11 @@ namespace eCommerceStarterCode.Controllers
             var itemInCart = _context.ShoppingCarts.Where(sc => sc.ShoppingCartId == id).FirstOrDefault(sc => sc.UserId == User.FindFirstValue("id"));
             
             itemInCart.Quantity = value.Quantity;
+            if(itemInCart.Quantity <= 0)
+            {
+                _context.Remove(itemInCart);
+                _context.SaveChanges();
+            }
             _context.SaveChanges();
             return Ok(itemInCart);
         }
