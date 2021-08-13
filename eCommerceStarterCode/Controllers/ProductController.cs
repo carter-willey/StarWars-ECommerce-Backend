@@ -44,10 +44,12 @@ namespace eCommerceStarterCode.Controllers
             {
                 total += review.Rating;
             }
-            int averageRating = total / reviews.Count();
-            product.AverageRating = averageRating;
-            _context.SaveChanges();
-
+            if(reviews.Count() != 0)
+            {
+               int averageRating = total / reviews.Count();
+               product.AverageRating = averageRating;
+                _context.SaveChanges();
+            }
             return Ok(product); 
         }
 
