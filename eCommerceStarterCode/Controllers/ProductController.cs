@@ -38,18 +38,18 @@ namespace eCommerceStarterCode.Controllers
             {
                 return NotFound();
             }
-            var reviews = _context.Reviews.Where(review => review.ProductId == id);
-            var total = 0;
-            foreach (var review in reviews)
-            {
-                total += review.Rating;
-            }
-            if(reviews.Count() != 0)
-            {
-               int averageRating = total / reviews.Count();
-               product.AverageRating = averageRating;
-                _context.SaveChanges();
-            }
+            //var reviews = _context.Reviews.Where(review => review.ProductId == id);
+            //var total = 0;
+            //foreach (var review in reviews)
+            //{
+            //    total += review.Rating;
+            //}
+            //if(reviews.Count() != 0)
+            //{
+            //   int averageRating = total / reviews.Count();
+            //   product.AverageRating = averageRating;
+            //    _context.SaveChanges();
+            //}
             return Ok(product); 
         }
 

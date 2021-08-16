@@ -41,6 +41,8 @@ namespace eCommerceStarterCode.Controllers
         public IActionResult Post([FromBody] Review value)
         {
             _context.Reviews.Add(value);
+            var product = _context.Products.FirstOrDefault(product => product.ProductId == value.ProductId);
+            product.AverageRating += value.Rating;
             _context.SaveChanges();
             return Ok(value);
         }
