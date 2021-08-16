@@ -30,13 +30,30 @@ namespace eCommerceStarterCode.Controllers
             return Ok(specificUserCart);
         }
 
-        // POST api/shoppingcart
-        [HttpPost, Authorize]
+        // PUT api/shoppingcart
+        [HttpPut, Authorize]
         public IActionResult Post([FromBody] ShoppingCart value)
         {
-            _context.ShoppingCarts.Add(value);
-            _context.SaveChanges();
-            return StatusCode(201, value);
+            var usersShoppingCart = _context.ShoppingCarts.Where(sc => sc.UserId == User.FindFirstValue("id"));
+            
+            if (usersShoppingCart.Where(sc => sc.ProductId == value.ProductId).Count() > 0 ){
+                var itemInCart = usersShoppingCart.FirstOrDefault(sc => sc.ProductId == value.ProductId);
+                itemInCart.UserId = User.FindFirstValue("id");
+                itemInCart.Quantity += 1;
+                _context.SaveChanges();
+                return Ok( itemInCart);
+            }
+            else
+            {
+                value.Quantity = 1;
+                value.UserId = User.FindFirstValue("id");
+                _context.ShoppingCarts.Add(value);
+                _context.SaveChanges();
+                return StatusCode(201, value);
+
+            }
+
+            
         }
 
         //// PATCH api/<ShoppingCartController>/5
