@@ -42,7 +42,7 @@ namespace eCommerceStarterCode.Controllers
         {
             _context.Reviews.Add(value);
             var product = _context.Products.FirstOrDefault(product => product.ProductId == value.ProductId);
-
+            _context.SaveChanges();
             return Ok(value);
         }
 
