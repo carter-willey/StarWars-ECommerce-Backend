@@ -75,9 +75,9 @@ namespace eCommerceStarterCode.Controllers
 
         //// DELETE api/<ShoppingCartController>/5
         [HttpDelete("{id}"), Authorize]
-        public IActionResult Delete(int id, [FromBody] ShoppingCart value)
+        public IActionResult Delete(int id)
         {
-            var itemInCart = _context.ShoppingCarts.Where(sc => sc.ShoppingCartId == id).FirstOrDefault(sc => sc.UserId == value.UserId);
+            var itemInCart = _context.ShoppingCarts.Where(sc => sc.ShoppingCartId == id).FirstOrDefault(sc => sc.UserId == User.FindFirstValue("id"));
             _context.Remove(itemInCart);
             _context.SaveChanges();
             return Ok();
