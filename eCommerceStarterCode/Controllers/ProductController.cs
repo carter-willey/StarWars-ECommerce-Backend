@@ -54,6 +54,14 @@ namespace eCommerceStarterCode.Controllers
             return Ok(product); 
         }
 
+        [HttpGet("userProducts/{id}")]
+
+        public IActionResult Get(string id)
+        {
+            var userProducts = _context.Products.Where(product => product.UserId == id);
+            return Ok(userProducts);
+        }
+
         // POST api/product
         [HttpPost, Authorize]
         public IActionResult Post([FromBody]Product value)
