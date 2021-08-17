@@ -2,6 +2,7 @@
 using eCommerceStarterCode.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -33,7 +34,7 @@ namespace eCommerceStarterCode.Controllers
         [HttpGet("{id}")]
         public IActionResult Get(int id)
         {
-            var product = _context.Products.FirstOrDefault(product => product.ProductId == id);
+            var product = _context.Products.Include(p => p.User).Include(p => p.Category).FirstOrDefault(product => product.ProductId == id);
             if (product == null)
             {
                 return NotFound();
