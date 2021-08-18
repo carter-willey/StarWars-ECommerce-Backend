@@ -82,6 +82,7 @@ namespace eCommerceStarterCode.Controllers
             product.AverageRating = value.AverageRating;
             product.CategoryId = value.CategoryId;
             product.UserId = value.UserId;
+            product.Image = value.Image;
             _context.SaveChanges();
             return Ok(product);
         }
