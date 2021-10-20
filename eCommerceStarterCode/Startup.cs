@@ -8,6 +8,8 @@ using eCommerceStarterCode.ActionFilters;
 using eCommerceStarterCode.Contracts;
 using eCommerceStarterCode.Extensions;
 using eCommerceStarterCode.Managers;
+using eCommerceStarterCode.Interfaces;
+using eCommerceStarterCode.Repositories;
 
 namespace eCommerceStarterCode
 {
@@ -31,6 +33,7 @@ namespace eCommerceStarterCode
             services.ConfigureIdentity();
             services.ConfigureJWT(Configuration);
             services.AddScoped<IAuthenticationManager, AuthenticationManager>();
+            services.AddScoped<IProductRepository, ProductRepository>();
             services.AddControllers();
         }
 

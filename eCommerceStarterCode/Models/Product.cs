@@ -10,7 +10,7 @@ namespace eCommerceStarterCode.Models
     {
         public int ProductId { get; set; }
         public string Name { get; set; }
-        public decimal Price { get; set; }
+        public int Price { get; set; }
         public string Description { get; set; }
         public int AverageRating { get; set; }
         [ForeignKey("Category")]

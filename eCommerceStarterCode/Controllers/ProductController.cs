@@ -1,4 +1,5 @@
 ﻿using eCommerceStarterCode.Data;
+using eCommerceStarterCode.Interfaces;
 using eCommerceStarterCode.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -16,85 +17,76 @@ namespace eCommerceStarterCode.Controllers
     [ApiController]
     public class ProductController : ControllerBase
     {
-        private ApplicationDbContext _context;
-        public ProductController(ApplicationDbContext context)
+        private IProductRepository _productRepository;
+        public ProductController(IProductRepository productRepository)
         {
-            _context = context;
+            this._productRepository = productRepository;
         }
         // GET: api/<ProductController>
         //GETS ALL PRODUCTS 
         [HttpGet]
-        public IActionResult Get()
+        public async Task<List<Product>> GetAllProducts()
         {
-            var products = _context.Products;
-            return Ok(products);
+            return await this._productRepository.GetAllProducts();
         }
 
         //GET api/product/5
-        [HttpGet("{id}")]
-        public IActionResult Get(int id)
+        [HttpGet("{productId}")]
+        public async Task<List<Product>> GetProduct(int productId)
         {
-            var product = _context.Products.Include(p => p.User).Include(p => p.Category).FirstOrDefault(product => product.ProductId == id);
-            if (product == null)
-            {
-                return NotFound();
-            }
-            var reviews = _context.Reviews.Where(review => review.ProductId == id);
-            var total = 0;
-            foreach (var review in reviews)
-            {
-                total += review.Rating;
-            }
-            if (reviews.Count() != 0)
-            {
-                int averageRating = total / reviews.Count();
-                product.AverageRating = averageRating;
-                _context.SaveChanges();
-            }
-            return Ok(product); 
+            return await this._productRepository.GetProduct(productId);
+
         }
 
-        [HttpGet("userProducts/{id}")]
+        [HttpGet("userProducts/{userId}")]
 
-        public IActionResult Get(string id)
+        public async Task<List<Product>> GetUsersProducts(string userId)
         {
-            var userProducts = _context.Products.Where(product => product.UserId == id);
-            return Ok(userProducts);
+            return await this._productRepository.GetUsersProducts(userId);
         }
 
         // POST api/product
         [HttpPost, Authorize]
-        public IActionResult Post([FromBody]Product value)
+        public async Task <ActionResult> AddNewProduct([FromBody] Product product)
         {
-            _context.Products.Add(value);
-            _context.SaveChanges();
-            return StatusCode(201, value);
+            if(ModelState.IsValid)
+            {
+                bool isValid = await this._productRepository.AddNewProduct(product);
+                if (isValid)
+                {
+                    return Ok();
+                }
+            }
+            return BadRequest();
+
         }
 
         //// PUT api/<ProductController>/5
-        [HttpPut("{id}")]
-        public IActionResult Put(int id, [FromBody]Product value)
+        [HttpPut("{productId}")]
+        public async Task<ActionResult> UpdateUserProduct(int productId, [FromBody] Product product)
         {
-            var product = _context.Products.FirstOrDefault(product => product.ProductId == id);
-            product.Name = value.Name;
-            product.Price = value.Price;
-            product.Description = value.Description;
-            product.AverageRating = value.AverageRating;
-            product.CategoryId = value.CategoryId;
-            product.UserId = value.UserId;
-            product.Image = value.Image;
-            _context.SaveChanges();
-            return Ok(product);
+            if (ModelState.IsValid)
+            {
+                bool isValid = await this._productRepository.UpdateUserProduct(productId, product);
+                if (isValid)
+                {
+                    return Ok();
+                }
+            }
+            return BadRequest();
         }
 
         //// DELETE api/<ProductController>/5
         [HttpDelete("{id}")]
-        public IActionResult Delete(int id)
+        public async Task<ActionResult> DeleteUserProduct(int productId)
         {
-            var product = _context.Products.FirstOrDefault(product => product.ProductId == id);
-            _context.Remove(product);
-            _context.SaveChanges();
-            return Ok();
+            bool isValid = await this._productRepository.DeleteUserProduct(productId);
+            if (isValid)
+            {
+                return Ok();
+            }
+
+            return BadRequest();
         }
     }
 }
