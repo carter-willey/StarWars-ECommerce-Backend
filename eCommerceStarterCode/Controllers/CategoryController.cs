@@ -1,4 +1,5 @@
 ﻿using eCommerceStarterCode.Data;
+using eCommerceStarterCode.Interfaces;
 using eCommerceStarterCode.Models;
 using Microsoft.AspNetCore.Mvc;
 using System;
@@ -15,64 +16,18 @@ namespace eCommerceStarterCode.Controllers
     public class CategoryController : ControllerBase
     {
 
-        private ApplicationDbContext _context;
-        public CategoryController(ApplicationDbContext context)
+        private ICategoryRepository _categoryRepository;
+        public CategoryController(ICategoryRepository categoryRepository) // Passed in new instance to the constructor and set _categoryRepository equal to this new instance
         {
-            _context = context;
+            this._categoryRepository = categoryRepository;
         }
 
         // GET: api/<CategoryController>
-        // GET ALL CATEGORIES
+        // Gets all categories from the database
         [HttpGet]
-        public IActionResult Get()
+        public async Task<List<Category>> GetAllCategoriesAsync()
         {
-            var categories = _context.Categories;
-            return Ok(categories);
-        }
-
-        // GET api/<CategoryController>/{id}
-        // GET CATEGORY BY ID
-        [HttpGet("{id}")]
-        public IActionResult Get(int id)
-        {
-            var category = _context.Categories.FirstOrDefault(category => category.CategoryId == id);
-            if (category == null)
-            {
-                return NotFound();
-            }
-            return Ok(category);
-        }
-
-        // POST api/<CategoryController>
-        // CREATE A CATEGORY
-        [HttpPost]
-        public IActionResult Post([FromBody] Category value)
-        {
-            _context.Categories.Add(value);
-            _context.SaveChanges();
-            return StatusCode(201, value);
-        }
-
-        // PUT api/<CategoryController>/{id}
-        // PUT CATEGORY
-        [HttpPut("{id}")]
-        public IActionResult Put(int id, [FromBody] Category value)
-        {
-            var category = _context.Categories.FirstOrDefault(category => category.CategoryId == id);
-            category.CategoryName = value.CategoryName;
-            _context.SaveChanges();
-            return Ok(category);
-        }
-
-        // DELETE api/<CategoryController>/{id}
-        // DELETE CATEGORY BY ID
-        [HttpDelete("{id}")]
-        public IActionResult Delete(int id)
-        {
-            var category = _context.Categories.FirstOrDefault(category => category.CategoryId == id);
-            _context.Remove(category);
-            _context.SaveChanges();
-            return Ok();
+            return await this._categoryRepository.GetAllCategoriesAsync();
         }
     }
 }
